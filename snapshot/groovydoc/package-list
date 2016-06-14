@@ -1,0 +1,3 @@
+grails.plugin.embedded.mongodb
+org.grails.compiler.injection
+test.embedded.mongo
