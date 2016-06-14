@@ -2,7 +2,7 @@
 grails:
     profile: plugin
     codegen:
-        defaultPackage: grails.plugin.test.embedded.mongo
+        defaultPackage: org.grails.plugin.embedded.mongodb
     spring:
         transactionManagement:
             proxies: false

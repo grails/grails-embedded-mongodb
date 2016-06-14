@@ -1,2 +1,2 @@
 org.springframework.test.context.TestExecutionListener=\
-  grails.plugin.embedded.mongodb.MongoTestExeuctionListener
+  org.grails.plugin.embedded.mongodb.MongoTestExeuctionListener

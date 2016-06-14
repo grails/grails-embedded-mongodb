@@ -1,4 +1,4 @@
-package grails.plugin.embedded.mongodb
+package org.grails.plugin.embedded.mongodb
 
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase

@@ -1,0 +1,1 @@
+@EnableAutoConfiguration(exclude=[org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration.class, org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration.class])
