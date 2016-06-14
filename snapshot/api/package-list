@@ -1,2 +1,2 @@
-grails.plugin.embedded.mongodb
 org.grails.compiler.injection
+org.grails.plugin.embedded.mongodb
