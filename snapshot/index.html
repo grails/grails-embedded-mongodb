@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
 <meta name="author" content="James Kleeh">
-<title>Grails Scaffolding</title>
+<title>Grails Embedded MongoDB Plugin</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -512,7 +512,7 @@ table.CodeRay td.code>pre{padding:0}
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Grails Scaffolding</h1>
+<h1>Grails Embedded MongoDB Plugin</h1>
 <div class="details">
 <span id="author" class="author">James Kleeh</span><br>
 <span id="email" class="email"><a href="mailto:kleehj@ociweb.com">kleehj@ociweb.com</a></span><br>
@@ -522,6 +522,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel1">
 <li><a href="#_introduction">1. Introduction</a></li>
 <li><a href="#_installation">2. Installation</a></li>
+<li><a href="#_considerations">3. Considerations</a></li>
 </ul>
 </div>
 </div>
@@ -530,7 +531,7 @@ table.CodeRay td.code>pre{padding:0}
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This plugin is designed to execute your integration tests with an embedded instance of a mongo database, similar to H2. Also similar to H2, it will ensure test data is deleted from the database before each test case.</p>
+<p>This plugin is designed to execute your integration tests with an embedded instance of a mongo database, similar to H2. Also similar to H2, it will ensure all data is cleared from the database before each test case.</p>
 </div>
 </div>
 </div>
@@ -543,7 +544,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Import the library in your <code>build.gradle</code> with the <code>provided</code> or <code>compileOnly</code> scope</p>
+<p>Add the plugin to your <code>build.gradle</code> with the <code>provided</code> or <code>compileOnly</code> scope</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy"> provided "org.grails.plugins:embedded-mongodb:1.0.0-SNAPSHOT"</code></pre>
@@ -551,7 +552,7 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </li>
 <li>
-<p>Import the library in your <code>build.gradle</code> with the <code>testCompile</code> scope</p>
+<p>Add the plugin to your <code>build.gradle</code> with the <code>testCompile</code> scope</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy"> testCompile "org.grails.plugins:embedded-mongodb:1.0.0-SNAPSHOT"</code></pre>
@@ -568,14 +569,14 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"> import grails.boot.GrailsApp
- import grails.boot.config.GrailsAutoConfiguration
- import org.springframework.boot.autoconfigure.EnableAutoConfiguration
- import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
+<pre class="CodeRay highlight"><code data-lang="groovy"> <span class="keyword">import</span> <span class="include">grails.boot.GrailsApp</span>
+ <span class="keyword">import</span> <span class="include">grails.boot.config.GrailsAutoConfiguration</span>
+ <span class="keyword">import</span> <span class="include">org.springframework.boot.autoconfigure.EnableAutoConfiguration</span>
+ <span class="keyword">import</span> <span class="include">org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration</span>
 
- @EnableAutoConfiguration(exclude = [EmbeddedMongoAutoConfiguration])
- class Application extends GrailsAutoConfiguration {
-     static void main(String[] args) {
+ <span class="annotation">@EnableAutoConfiguration</span>(exclude = [EmbeddedMongoAutoConfiguration])
+ <span class="type">class</span> <span class="class">Application</span> <span class="directive">extends</span> GrailsAutoConfiguration {
+     <span class="directive">static</span> <span class="type">void</span> main(<span class="predefined-type">String</span><span class="type">[]</span> args) {
          GrailsApp.run(Application, args)
      }
  }</code></pre>
@@ -583,10 +584,27 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_considerations">3. Considerations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To prevent any possible confusion with an existing running instance of a real mongo database, it is recommended to change the port for the test environment. The embedded mongo database will run on the port specified in your configuration.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"> <span class="key">environments</span>:
+     <span class="key">test</span>:
+         <span class="key">grails</span>:
+             <span class="key">mongodb</span>:
+                 <span class="key">port</span>: <span class="string"><span class="content">27018</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-15 15:42:25 UTC
+Last updated 2016-06-15 16:28:29 UTC
 </div>
 </div>
 </body>
