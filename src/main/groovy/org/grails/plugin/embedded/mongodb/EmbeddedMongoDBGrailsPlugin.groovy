@@ -17,14 +17,14 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
 
     String grailsVersion = '3.1.0 > *'
     String author = 'James Kleeh'
-    String authorEmail = 'james.kleeh@gmail.com'
+    String authorEmail = 'kleehj@ociweb.com'
     String title = 'Mongo Embedded Integration Test Plugin'
     String description = 'A plugin to provide an in memory mongo database to be used for integration testing'
-    String documentation = 'http://grails-plugins.github.io/mongo-embed-integration/'
+    String documentation = 'http://grails-plugins.github.io/grails-embedded-mongodb/latest'
     String license = 'APACHE'
     def organization = [name: 'Grails', url: 'http://www.grails.org/']
-    def issueManagement = [url: 'https://github.com/grails-plugins/mongo-embedded-integration/issues']
-    def scm = [url: 'https://github.com/grails-plugins/mongo-embedded-integration']
+    def issueManagement = [url: 'http://grails-plugins.github.io/grails-embedded-mongodb/issues']
+    def scm = [url: 'https://github.com/grails-plugins/grails-embedded-mongodb']
 
 
     Closure doWithSpring() {{->
