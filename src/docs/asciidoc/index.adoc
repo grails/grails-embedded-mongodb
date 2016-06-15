@@ -1,4 +1,4 @@
-= Grails Scaffolding
+= Grails Embedded MongoDB Plugin
 :author: James Kleeh
 :email: kleehj@ociweb.com
 :source-highlighter: coderay
@@ -6,24 +6,24 @@
 
 == Introduction
 
-This plugin is designed to execute your integration tests with an embedded instance of a mongo database, similar to H2. Also similar to H2, it will ensure test data is deleted from the database before each test case.
+This plugin is designed to execute your integration tests with an embedded instance of a mongo database, similar to H2. Also similar to H2, it will ensure all data is cleared from the database before each test case.
 
 == Installation
 
 To start using this plugin, there are two options
 
-. Import the library in your `build.gradle` with the `provided` or `compileOnly` scope
+. Add the plugin to your `build.gradle` with the `provided` or `compileOnly` scope
 [source,groovy,subs="attributes",indent=1]
 provided "org.grails.plugins:embedded-mongodb:{version}"
 
-. Import the library in your `build.gradle` with the `testCompile` scope
+. Add the plugin to your `build.gradle` with the `testCompile` scope
 [source,groovy,subs="attributes",indent=1]
 testCompile "org.grails.plugins:embedded-mongodb:{version}"
 
 If you choose this option, there is 1 additional step required. You must exclude the link:http://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/mongo/embedded/EmbeddedMongoAutoConfiguration.html[EmbeddedMongoAutoConfiguration] from your `Application.groovy`.
 
 Example:
-[source,groovy,subs="attributes",indent=1]
+[source,groovy,indent=1]
 ----
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
@@ -38,6 +38,17 @@ class Application extends GrailsAutoConfiguration {
 }
 ----
 
+== Considerations
 
+To prevent any possible confusion with an existing running instance of a real mongo database, it is recommended to change the port for the test environment. The embedded mongo database will run on the port specified in your configuration.
+
+[source,yaml,indent=1]
+----
+environments:
+    test:
+        grails:
+            mongodb:
+                port: 27018
+----
 
 
