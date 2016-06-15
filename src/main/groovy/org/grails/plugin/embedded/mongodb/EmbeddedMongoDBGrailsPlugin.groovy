@@ -1,13 +1,17 @@
 package org.grails.plugin.embedded.mongodb
 
 import com.mongodb.ServerAddress
+import de.flapdoodle.embed.mongo.Command
 import de.flapdoodle.embed.mongo.MongodExecutable
 import de.flapdoodle.embed.mongo.MongodProcess
 import de.flapdoodle.embed.mongo.MongodStarter
 import de.flapdoodle.embed.mongo.config.IMongodConfig
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder
 import de.flapdoodle.embed.mongo.config.Net
+import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder
 import de.flapdoodle.embed.mongo.distribution.Version
+import de.flapdoodle.embed.process.config.IRuntimeConfig
+import de.flapdoodle.embed.process.config.io.ProcessOutput
 import de.flapdoodle.embed.process.runtime.Network
 import grails.plugins.*
 import grails.util.Environment
@@ -29,7 +33,12 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
 
     Closure doWithSpring() {{->
         if (Environment.current == Environment.TEST) {
-            MongodStarter starter = MongodStarter.defaultInstance
+            IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+                    .defaults(Command.MongoD)
+                    .processOutput(ProcessOutput.defaultInstanceSilent)
+                    .build()
+
+            MongodStarter starter = MongodStarter.getInstance(runtimeConfig)
             int port = config.getProperty(MongoDatastore.SETTING_PORT, int, ServerAddress.defaultPort())
             IMongodConfig mongodConfig = new MongodConfigBuilder()
                     .version(Version.Main.PRODUCTION)
