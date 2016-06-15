@@ -59,18 +59,14 @@ task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
 }
 grailsPublish {
-    // TODO: Provide values here
-    user = 'user'
-    key = 'key'
-    githubSlug = 'foo/bar'
+    userOrg = 'grails'
+    githubSlug = 'grails-plugins/grails-embedded-mongodb'
     license {
         name = 'Apache-2.0'
     }
-    title = "My Plugin"
-    desc = "Full plugin description"
-    developers = [johndoe:"John Doe"]
-    portalUser = ""
-    portalPassword = ""    
+    title = "Embedded MongoDB Plugin"
+    desc = "Executes an embedded mongo database for integration or functional testing"
+    developers = [jameskleeh: "James Kleeh"]
 }
 
 asciidoctor {

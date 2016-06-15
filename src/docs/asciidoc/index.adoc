@@ -40,7 +40,7 @@ class Application extends GrailsAutoConfiguration {
 
 == Configuration
 
-You can set the version of the database you would like to embed. If not specified the default will be the latest supported production version defined by `de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION`
+You can set the version of the database you would like to embed. If not specified, the version defined by `de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION` will be used.
 
 [source,yaml,indent=1]
 ----
