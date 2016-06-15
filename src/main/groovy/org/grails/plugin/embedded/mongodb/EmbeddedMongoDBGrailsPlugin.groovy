@@ -9,6 +9,7 @@ import de.flapdoodle.embed.mongo.config.IMongodConfig
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder
 import de.flapdoodle.embed.mongo.config.Net
 import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder
+import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion
 import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.process.config.IRuntimeConfig
 import de.flapdoodle.embed.process.config.io.ProcessOutput
@@ -30,6 +31,14 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
     def issueManagement = [url: 'http://grails-plugins.github.io/grails-embedded-mongodb/issues']
     def scm = [url: 'https://github.com/grails-plugins/grails-embedded-mongodb']
 
+    int getPort() {
+        config.getProperty(MongoDatastore.SETTING_PORT, int, ServerAddress.defaultPort())
+    }
+
+    IFeatureAwareVersion getVersion() {
+        String version = config.getProperty("grails.mongodb.version", String, Version.Main.PRODUCTION.asInDownloadPath())
+        Version.valueOf("V" + version.replaceAll(/(\.|-)/, '_').toUpperCase())
+    }
 
     Closure doWithSpring() {{->
         if (Environment.current == Environment.TEST) {
@@ -39,10 +48,10 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
                     .build()
 
             MongodStarter starter = MongodStarter.getInstance(runtimeConfig)
-            int port = config.getProperty(MongoDatastore.SETTING_PORT, int, ServerAddress.defaultPort())
+
             IMongodConfig mongodConfig = new MongodConfigBuilder()
-                    .version(Version.Main.PRODUCTION)
-                    .net(new Net("127.0.0.1", port, Network.localhostIsIPv6()))
+                    .version(getVersion())
+                    .net(new Net("127.0.0.1", getPort(), Network.localhostIsIPv6()))
                     .build()
 
             MongodExecutable mongodExecutable = starter.prepare(mongodConfig)

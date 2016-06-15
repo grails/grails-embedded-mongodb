@@ -4,9 +4,16 @@ import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase
 import grails.config.Config
 import grails.core.GrailsApplication
+import org.grails.datastore.mapping.mongo.MongoDatastore
 import org.springframework.test.context.TestContext
 import org.springframework.test.context.TestExecutionListener
 
+/**
+ * This class will clear all non system collections from the running mongo database
+ * before each test method is executed
+ *
+ * @author James Kleeh
+ */
 class MongoTestExeuctionListener implements TestExecutionListener {
 
     static MongoDatabase db
@@ -16,7 +23,7 @@ class MongoTestExeuctionListener implements TestExecutionListener {
         if (!db) {
             MongoClient mongo = testContext.applicationContext.getBean("mongo", MongoClient)
             Config config = (Config)testContext.applicationContext.getBean("grailsApplication", GrailsApplication).config
-            String databaseName = config.getProperty("grails.mongodb.databaseName", "")
+            String databaseName = config.getProperty(MongoDatastore.SETTING_DATABASE_NAME, "")
             db = mongo.getDatabase(databaseName)
         }
     }

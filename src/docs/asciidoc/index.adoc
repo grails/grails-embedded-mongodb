@@ -6,7 +6,7 @@
 
 == Introduction
 
-This plugin is designed to execute your integration tests with an embedded instance of a mongo database, similar to H2. Also similar to H2, it will ensure all data is cleared from the database before each test case.
+This plugin is designed to execute your integration tests with an embedded instance of a mongo database, similar to H2. Also similar to H2, it will ensure all data is cleared from the database before each test case. The link:https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo[Flapdoodle Embed Mongo] library is used to execute the embedded database.
 
 == Installation
 
@@ -14,11 +14,11 @@ To start using this plugin, there are two options
 
 . Add the plugin to your `build.gradle` with the `provided` or `compileOnly` scope
 [source,groovy,subs="attributes",indent=1]
-provided "org.grails.plugins:embedded-mongodb:{version}"
+provided "{groupId}:{artifactId}:{version}"
 
 . Add the plugin to your `build.gradle` with the `testCompile` scope
 [source,groovy,subs="attributes",indent=1]
-testCompile "org.grails.plugins:embedded-mongodb:{version}"
+testCompile "{groupId}:{artifactId}:{version}"
 
 If you choose this option, there is 1 additional step required. You must exclude the link:http://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/mongo/embedded/EmbeddedMongoAutoConfiguration.html[EmbeddedMongoAutoConfiguration] from your `Application.groovy`.
 
@@ -38,7 +38,21 @@ class Application extends GrailsAutoConfiguration {
 }
 ----
 
-== Considerations
+== Configuration
+
+You can set the version of the database you would like to embed. If not specified the default will be the latest supported production version defined by `de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION`
+
+[source,yaml,indent=1]
+----
+environments:
+    test:
+        grails:
+            mongodb:
+                version: "3.2.1"
+----
+
+
+=== Considerations
 
 To prevent any possible confusion with an existing running instance of a real mongo database, it is recommended to change the port for the test environment. The embedded mongo database will run on the port specified in your configuration.
 

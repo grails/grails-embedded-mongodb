@@ -9,6 +9,12 @@ import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.control.SourceUnit
 import org.springframework.util.ClassUtils
 
+/**
+ * This transformation will exclude the org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
+ * from the applications auto configuration
+ *
+ * @author James Kleeh
+ */
 @CompileStatic
 @AstTransformer
 class MongoApplicationClassInjector extends ApplicationClassInjector {
