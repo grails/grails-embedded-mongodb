@@ -29,15 +29,15 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
 
     Closure doWithSpring() {{->
         if (Environment.current == Environment.TEST) {
-            MongodStarter starter = MongodStarter.getDefaultInstance();
+            MongodStarter starter = MongodStarter.defaultInstance
             int port = config.getProperty(MongoDatastore.SETTING_PORT, int, ServerAddress.defaultPort())
             IMongodConfig mongodConfig = new MongodConfigBuilder()
                     .version(Version.Main.PRODUCTION)
                     .net(new Net("127.0.0.1", port, Network.localhostIsIPv6()))
-                    .build();
+                    .build()
 
-            MongodExecutable mongodExecutable = starter.prepare(mongodConfig);
-            MongodProcess mongod = mongodExecutable.start();
+            MongodExecutable mongodExecutable = starter.prepare(mongodConfig)
+            mongodExecutable.start()
         }
     }}
 
