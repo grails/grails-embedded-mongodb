@@ -40,6 +40,8 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
         Version.valueOf("V" + version.replaceAll(/(\.|-)/, '_').toUpperCase())
     }
 
+    static MongodExecutable mongodExecutable = null
+
     Closure doWithSpring() {{->
         if (Environment.current == Environment.TEST) {
             IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
@@ -54,9 +56,15 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
                     .net(new Net("127.0.0.1", getPort(), Network.localhostIsIPv6()))
                     .build()
 
-            MongodExecutable mongodExecutable = starter.prepare(mongodConfig)
+            mongodExecutable = starter.prepare(mongodConfig)
             mongodExecutable.start()
         }
     }}
+
+    void onShutdown(evt) {
+        if (mongodExecutable != null) {
+            mongodExecutable.stop()
+        }
+    }
 
 }
