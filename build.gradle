@@ -15,7 +15,7 @@ plugins {
     id 'org.asciidoctor.convert' version '1.5.3'
 }
 
-version "1.0.2.BUILD-SNAPSHOT"
+version "1.0.3.BUILD-SNAPSHOT"
 group "org.grails.plugins"
 
 apply plugin:"eclipse"
@@ -50,14 +50,15 @@ dependencies {
     provided "org.grails:grails-core"
     profile "org.grails.profiles:plugin:3.1.8"
     provided "org.grails:grails-plugin-testing"
-    compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5") {
+    compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.0") {
         exclude group: "commons-io"
         exclude group: "org.apache.commons"
         exclude group: "net.java.dev.jna"
         exclude group: "org.slf4j"
     }
-    provided "org.grails.plugins:mongodb:5.0.8"
-    documentation "org.codehaus.groovy:groovy-all:2.4.6"
+    compile "de.flapdoodle.embed:de.flapdoodle.embed.process:2.0.1"
+    provided "org.grails.plugins:mongodb:6.0.11"
+    documentation "org.codehaus.groovy:groovy-all:2.4.10"
 }
 
 task wrapper(type: Wrapper) {
