@@ -57,7 +57,7 @@ dependencies {
         exclude group: "org.slf4j"
     }
     compile "de.flapdoodle.embed:de.flapdoodle.embed.process:2.0.1"
-    provided "org.grails.plugins:mongodb:6.0.11"
+    provided "org.grails.plugins:mongodb:5.0.8"
     documentation "org.codehaus.groovy:groovy-all:2.4.10"
 }
 

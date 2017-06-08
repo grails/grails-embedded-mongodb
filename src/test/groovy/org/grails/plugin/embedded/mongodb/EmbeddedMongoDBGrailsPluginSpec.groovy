@@ -6,9 +6,6 @@ import grails.core.GrailsApplication
 import org.grails.config.PropertySourcesConfig
 import spock.lang.Specification
 
-/**
- * Created by Jim on 6/15/2016.
- */
 class EmbeddedMongoDBGrailsPluginSpec extends Specification {
 
     void "test version no config"() {
@@ -19,32 +16,36 @@ class EmbeddedMongoDBGrailsPluginSpec extends Specification {
             }
         }
 
-        expect:
-        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion().asInDownloadPath() == Version.Main.PRODUCTION.asInDownloadPath()
+        when:
+        def version = new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion()
+
+        then:
+        version == Version.V3_4_1
+        version.asInDownloadPath() == Version.Main.PRODUCTION.asInDownloadPath()
     }
 
     void "test version"() {
         given:
         GrailsApplication grailsApplication = Mock(GrailsApplication) {
             1 * getConfig() >> {
-                new PropertySourcesConfig([grails: [mongodb: [version: "3.4.1"]]])
+                new PropertySourcesConfig([grails: [mongodb: [version: "3.3.1"]]])
             }
         }
 
         expect:
-        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V3_4_1
+        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V3_3_1
     }
 
     void "test version release candidate"() {
         given:
         GrailsApplication grailsApplication = Mock(GrailsApplication) {
             1 * getConfig() >> {
-                new PropertySourcesConfig([grails: [mongodb: [version: "3.5.1"]]])
+                new PropertySourcesConfig([grails: [mongodb: [version: "3.2.1-rc3"]]])
             }
         }
 
         expect:
-        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V3_5_1
+        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V3_2_1_RC3
     }
 
     void "test version not found"() {
