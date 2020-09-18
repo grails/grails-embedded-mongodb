@@ -15,7 +15,7 @@ plugins {
     id 'org.asciidoctor.convert' version '1.5.3'
 }
 
-version "1.0.2.BUILD-SNAPSHOT"
+version "2.0.0.BUILD-SNAPSHOT"
 group "org.grails.plugins"
 
 apply plugin:"eclipse"
@@ -33,13 +33,6 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.grails:grails-bom:$grailsVersion"
-    }
-    applyMavenExclusions false
-}
-
 configurations {
     documentation
 }
@@ -48,21 +41,20 @@ dependencies {
     provided "org.springframework.boot:spring-boot-starter-logging"
     provided "org.springframework.boot:spring-boot-autoconfigure"
     provided "org.grails:grails-core"
-    profile "org.grails.profiles:plugin:3.1.8"
+    profile "org.grails.profiles:plugin"
     provided "org.grails:grails-plugin-testing"
+    provided "org.grails:grails-gorm-testing-support"
+    provided "org.grails:grails-web-testing-support"
     compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5") {
         exclude group: "commons-io"
         exclude group: "org.apache.commons"
         exclude group: "net.java.dev.jna"
         exclude group: "org.slf4j"
     }
-    provided "org.grails.plugins:mongodb:5.0.8"
-    documentation "org.codehaus.groovy:groovy-all:2.4.6"
+    provided "org.grails.plugins:mongodb"
+    documentation "org.codehaus.groovy:groovy-all"
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleWrapperVersion
-}
 grailsPublish {
     userOrg = 'grails'
     githubSlug = 'grails-plugins/grails-embedded-mongodb'
