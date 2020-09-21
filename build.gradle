@@ -45,7 +45,7 @@ dependencies {
     provided "org.grails:grails-plugin-testing"
     provided "org.grails:grails-gorm-testing-support"
     provided "org.grails:grails-web-testing-support"
-    compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5") {
+    compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0") {
         exclude group: "commons-io"
         exclude group: "org.apache.commons"
         exclude group: "net.java.dev.jna"
