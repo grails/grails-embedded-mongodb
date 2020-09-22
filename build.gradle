@@ -37,14 +37,20 @@ configurations {
     documentation
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.mongodb') {
+            details.useVersion(mongodbJavaDriverVersion)
+        }
+    }
+}
+
 dependencies {
     provided "org.springframework.boot:spring-boot-starter-logging"
     provided "org.springframework.boot:spring-boot-autoconfigure"
     provided "org.grails:grails-core"
     profile "org.grails.profiles:plugin"
-    provided "org.grails:grails-plugin-testing"
     provided "org.grails:grails-gorm-testing-support"
-    provided "org.grails:grails-web-testing-support"
     compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0") {
         exclude group: "commons-io"
         exclude group: "org.apache.commons", module: "commons-lang3"
@@ -97,3 +103,23 @@ task docs(type:Copy, dependsOn:[apidocs, asciidoctor]) {
     from "$buildDir/asciidoc/html5"
     into "$buildDir/docs"
 }
+
+bootRun {
+    ignoreExitValue true
+    jvmArgs(
+            '-Dspring.output.ansi.enabled=always',
+            '-noverify',
+            '-XX:TieredStopAtLevel=1',
+            '-Xmx1024m')
+    sourceResources sourceSets.main
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+}
+
+tasks.withType(GroovyCompile) {
+    configure(groovyOptions) {
+        forkOptions.jvmArgs = ['-Xmx1024m']
+    }
+}
+
+bootJar.enabled = false

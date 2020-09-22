@@ -2,7 +2,6 @@ package org.grails.compiler.injection
 
 import grails.compiler.ast.AstTransformer
 import groovy.transform.CompileStatic
-import javassist.compiler.CompileError
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.expr.ClassExpression
