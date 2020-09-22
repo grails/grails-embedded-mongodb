@@ -18,6 +18,7 @@ plugins {
 version "2.0.0.BUILD-SNAPSHOT"
 group "org.grails.plugins"
 
+apply plugin: 'java-library'
 apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"org.grails.grails-plugin"
@@ -51,7 +52,7 @@ dependencies {
     provided "org.grails:grails-core"
     profile "org.grails.profiles:plugin"
     provided "org.grails:grails-gorm-testing-support"
-    compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0") {
+    api("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0") {
         exclude group: "commons-io"
         exclude group: "org.apache.commons", module: "commons-lang3"
         exclude group: "net.java.dev.jna"
