@@ -20,7 +20,7 @@ import org.grails.datastore.mapping.mongo.MongoDatastore
 
 class EmbeddedMongoDBGrailsPlugin extends Plugin {
 
-    String grailsVersion = '3.1.0 > *'
+    String grailsVersion = '3.3.11 > *'
     String author = 'James Kleeh'
     String authorEmail = 'kleehj@ociweb.com'
     String title = 'Mongo Embedded Integration Test Plugin'
@@ -32,7 +32,7 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
     def scm = [url: 'https://github.com/grails-plugins/grails-embedded-mongodb']
 
     int getPort() {
-        config.getProperty(MongoDatastore.SETTING_PORT, int, ServerAddress.defaultPort())
+        config.getProperty(MongoDatastore.SETTING_PORT, Integer, ServerAddress.defaultPort())
     }
 
     IFeatureAwareVersion getVersion() {

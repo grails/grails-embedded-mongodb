@@ -15,9 +15,10 @@ plugins {
     id 'org.asciidoctor.convert' version '1.5.3'
 }
 
-version "1.0.2.BUILD-SNAPSHOT"
+version "2.0.0.BUILD-SNAPSHOT"
 group "org.grails.plugins"
 
+apply plugin: 'java-library'
 apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"org.grails.grails-plugin"
@@ -33,36 +34,34 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.grails:grails-bom:$grailsVersion"
-    }
-    applyMavenExclusions false
-}
-
 configurations {
     documentation
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.mongodb') {
+            details.useVersion(mongodbJavaDriverVersion)
+        }
+    }
 }
 
 dependencies {
     provided "org.springframework.boot:spring-boot-starter-logging"
     provided "org.springframework.boot:spring-boot-autoconfigure"
     provided "org.grails:grails-core"
-    profile "org.grails.profiles:plugin:3.1.8"
-    provided "org.grails:grails-plugin-testing"
-    compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5") {
+    profile "org.grails.profiles:plugin"
+    provided "org.grails:grails-gorm-testing-support"
+    api("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0") {
         exclude group: "commons-io"
-        exclude group: "org.apache.commons"
+        exclude group: "org.apache.commons", module: "commons-lang3"
         exclude group: "net.java.dev.jna"
         exclude group: "org.slf4j"
     }
-    provided "org.grails.plugins:mongodb:5.0.8"
-    documentation "org.codehaus.groovy:groovy-all:2.4.6"
+    provided "org.grails.plugins:mongodb"
+    documentation "org.codehaus.groovy:groovy-all"
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleWrapperVersion
-}
 grailsPublish {
     userOrg = 'grails'
     githubSlug = 'grails-plugins/grails-embedded-mongodb'
@@ -105,3 +104,23 @@ task docs(type:Copy, dependsOn:[apidocs, asciidoctor]) {
     from "$buildDir/asciidoc/html5"
     into "$buildDir/docs"
 }
+
+bootRun {
+    ignoreExitValue true
+    jvmArgs(
+            '-Dspring.output.ansi.enabled=always',
+            '-noverify',
+            '-XX:TieredStopAtLevel=1',
+            '-Xmx1024m')
+    sourceResources sourceSets.main
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+}
+
+tasks.withType(GroovyCompile) {
+    configure(groovyOptions) {
+        forkOptions.jvmArgs = ['-Xmx1024m']
+    }
+}
+
+bootJar.enabled = false

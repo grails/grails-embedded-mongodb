@@ -27,12 +27,12 @@ class EmbeddedMongoDBGrailsPluginSpec extends Specification {
         given:
         GrailsApplication grailsApplication = Mock(GrailsApplication) {
             1 * getConfig() >> {
-                new PropertySourcesConfig([grails: [mongodb: [version: "3.2.1"]]])
+                new PropertySourcesConfig([grails: [mongodb: [version: "4.0.2"]]])
             }
         }
 
         expect:
-        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V3_2_1
+        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V4_0_2
     }
 
     void "test version release candidate"() {
