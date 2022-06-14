@@ -1,37 +1,24 @@
 buildscript {
-    ext {
-        grailsVersion = project.grailsVersion
-    }
     repositories {
-        mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.12'
     }
 }
 
-plugins {
-    id 'org.asciidoctor.convert' version '1.5.3'
-}
-
-version "2.0.0.BUILD-SNAPSHOT"
-//version "2.0.0.M2"
+version project.projectVersion
 group "org.grails.plugins"
 
 apply plugin: 'java-library'
 apply plugin:"eclipse"
 apply plugin:"idea"
+apply plugin: "org.asciidoctor.convert"
 apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
-
-ext {
-    grailsVersion = project.grailsVersion
-    gradleWrapperVersion = project.gradleWrapperVersion
-}
+apply plugin:"org.grails.internal.grails-plugin-publish"
 
 repositories {
-    mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
 }
 
@@ -48,18 +35,18 @@ configurations.all {
 }
 
 dependencies {
-    provided "org.springframework.boot:spring-boot-starter-logging"
-    provided "org.springframework.boot:spring-boot-autoconfigure"
-    provided "org.grails:grails-core"
-    profile "org.grails.profiles:plugin"
-    provided "org.grails:grails-gorm-testing-support"
+    api "org.springframework.boot:spring-boot-starter-logging"
+    api "org.springframework.boot:spring-boot-autoconfigure"
+    api "org.grails:grails-core"
+    api "org.grails.profiles:plugin"
+    api "org.grails:grails-gorm-testing-support"
     api("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0") {
         exclude group: "commons-io"
         exclude group: "org.apache.commons", module: "commons-lang3"
         exclude group: "net.java.dev.jna"
         exclude group: "org.slf4j"
     }
-    provided "org.grails.plugins:mongodb"
+    api "org.grails.plugins:mongodb"
     documentation "org.codehaus.groovy:groovy-all"
 }
 
@@ -90,7 +77,7 @@ asciidoctor {
             'sourcedir'     : "${projectDir}/src/main/groovy"
 }
 
-task apidocs(type: Groovydoc) {
+def apidocs = tasks.register("apidocs", Groovydoc) {
     source project.files('src/main/groovy')
 
     destinationDir = new File(buildDir, 'docs/api')
@@ -101,7 +88,9 @@ task apidocs(type: Groovydoc) {
     groovyClasspath = configurations.documentation
 }
 
-task docs(type:Copy, dependsOn:[apidocs, asciidoctor]) {
+def docs = tasks.register("docs", Copy) {
+    type = "documentation"
+    dependsOn = ["apidocs", "asciidoctor"]
     from "$buildDir/asciidoc/html5"
     into "$buildDir/docs"
 }
@@ -123,5 +112,21 @@ tasks.withType(GroovyCompile) {
         forkOptions.jvmArgs = ['-Xmx1024m']
     }
 }
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+
+        showExceptions true
+        exceptionFormat "full"
+        showCauses true
+        showStackTraces true
+    }
+}
+
 
 bootJar.enabled = false
