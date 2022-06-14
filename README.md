@@ -6,4 +6,4 @@ A plugin for running integration tests against an embedded mongo database using 
 
 ## Documentation
 
-http://grails-plugins.github.io/grails-embedded-mongodb/latest
+[http://grails-plugins.github.io/grails-embedded-mongodb/latest](https://grails.github.io/grails-embedded-mongodb/latest/)
