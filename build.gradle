@@ -78,6 +78,7 @@ asciidoctor {
 }
 
 def apidocs = tasks.register("apidocs", Groovydoc) {
+    group = "documentation"
     source project.files('src/main/groovy')
 
     destinationDir = new File(buildDir, 'docs/api')
@@ -89,7 +90,7 @@ def apidocs = tasks.register("apidocs", Groovydoc) {
 }
 
 def docs = tasks.register("docs", Copy) {
-    type = "documentation"
+    group = "documentation"
     dependsOn = ["apidocs", "asciidoctor"]
     from "$buildDir/asciidoc/html5"
     into "$buildDir/docs"
