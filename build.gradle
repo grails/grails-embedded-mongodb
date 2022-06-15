@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.6.1'
+        classpath "org.asciidoctor:asciidoctor-gradle-jvm:3.3.2"
     }
 }
 
@@ -14,7 +14,7 @@ group "org.grails.plugins"
 apply plugin: 'java-library'
 apply plugin:"eclipse"
 apply plugin:"idea"
-apply plugin: "org.asciidoctor.convert"
+apply plugin: "org.asciidoctor.jvm.convert"
 apply plugin:"org.grails.grails-plugin"
 apply plugin:"org.grails.internal.grails-plugin-publish"
 
@@ -47,7 +47,9 @@ dependencies {
         exclude group: "org.slf4j"
     }
     api "org.grails.plugins:mongodb"
-    documentation "org.codehaus.groovy:groovy-all"
+    documentation "org.codehaus.groovy:groovy:$groovyVersion"
+    documentation "org.codehaus.groovy:groovy-ant:$groovyVersion"
+    documentation "org.codehaus.groovy:groovy-templates:$groovyVersion"
 }
 
 grailsPublish {
@@ -58,7 +60,7 @@ grailsPublish {
     }
     title = "Embedded MongoDB Plugin"
     desc = "Executes an embedded mongo database for integration or functional testing"
-    developers = [jameskleeh: "James Kleeh"]
+    developers = [jameskleeh: "James Kleeh", puneetbehl: "Puneet Behl"]
 }
 
 asciidoctor {
