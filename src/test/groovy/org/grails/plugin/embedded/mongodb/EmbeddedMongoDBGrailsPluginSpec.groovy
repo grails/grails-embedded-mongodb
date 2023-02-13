@@ -2,6 +2,7 @@ package org.grails.plugin.embedded.mongodb
 
 import com.mongodb.ServerAddress
 import de.flapdoodle.embed.mongo.distribution.Version
+import de.flapdoodle.embed.mongo.distribution.Versions
 import grails.core.GrailsApplication
 import org.grails.config.PropertySourcesConfig
 import spock.lang.Specification
@@ -20,7 +21,7 @@ class EmbeddedMongoDBGrailsPluginSpec extends Specification {
         }
 
         expect:
-        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion().asInDownloadPath() == Version.Main.PRODUCTION.asInDownloadPath()
+        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion().asInDownloadPath() == Version.Main.V6_0.asInDownloadPath()
     }
 
     void "test version"() {
@@ -32,7 +33,7 @@ class EmbeddedMongoDBGrailsPluginSpec extends Specification {
         }
 
         expect:
-        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V4_0_2
+        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Versions.withFeatures(Version.of(Version.V4_0_2.asInDownloadPath()))
     }
 
     void "test version release candidate"() {
@@ -44,7 +45,7 @@ class EmbeddedMongoDBGrailsPluginSpec extends Specification {
         }
 
         expect:
-        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Version.V3_2_1_RC3
+        new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion() == Versions.withFeatures(Version.of(Version.V3_2_1_RC3.asInDownloadPath()))
     }
 
     void "test version not found"() {
@@ -59,7 +60,7 @@ class EmbeddedMongoDBGrailsPluginSpec extends Specification {
         new EmbeddedMongoDBGrailsPlugin(grailsApplication: grailsApplication).getVersion()
 
         then:
-        thrown(IllegalArgumentException)
+        thrown(ArrayIndexOutOfBoundsException)
     }
 
     void "test default port"() {
