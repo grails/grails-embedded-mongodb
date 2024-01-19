@@ -40,7 +40,7 @@ dependencies {
     api "org.grails:grails-core"
     api "org.grails.profiles:plugin"
     api "org.grails:grails-gorm-testing-support"
-    api("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0") {
+    api("de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.12.2") {
         exclude group: "commons-io"
         exclude group: "org.apache.commons", module: "commons-lang3"
         exclude group: "net.java.dev.jna"
