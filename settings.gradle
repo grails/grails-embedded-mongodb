@@ -6,7 +6,7 @@ plugins {
 rootProject.name="embedded-mongodb"
 
 gradleEnterprise {
-    server = 'https://ge.grails.org'
+    server = 'https://develocity.apache.org'
     buildScan {
         publishAlways()
         publishIfAuthenticated()
