@@ -1,22 +1,18 @@
 package org.grails.plugin.embedded.mongodb
 
 import com.mongodb.ServerAddress
-import de.flapdoodle.embed.mongo.Command
-import de.flapdoodle.embed.mongo.MongodExecutable
-import de.flapdoodle.embed.mongo.MongodProcess
-import de.flapdoodle.embed.mongo.MongodStarter
-import de.flapdoodle.embed.mongo.config.IMongodConfig
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder
 import de.flapdoodle.embed.mongo.config.Net
-import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder
 import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion
-import de.flapdoodle.embed.mongo.distribution.Version
-import de.flapdoodle.embed.process.config.IRuntimeConfig
-import de.flapdoodle.embed.process.config.io.ProcessOutput
-import de.flapdoodle.embed.process.runtime.Network
+import de.flapdoodle.embed.mongo.distribution.Versions
+import de.flapdoodle.embed.mongo.transitions.Mongod
+import de.flapdoodle.embed.mongo.transitions.RunningMongodProcess
+import de.flapdoodle.embed.process.io.ProcessOutput
+import de.flapdoodle.reverse.TransitionWalker
+import de.flapdoodle.reverse.transitions.Start
 import grails.plugins.*
 import grails.util.Environment
 import org.grails.datastore.mapping.mongo.MongoDatastore
+import de.flapdoodle.embed.process.distribution.Version
 
 class EmbeddedMongoDBGrailsPlugin extends Plugin {
 
@@ -36,34 +32,31 @@ class EmbeddedMongoDBGrailsPlugin extends Plugin {
     }
 
     IFeatureAwareVersion getVersion() {
-        String version = config.getProperty("grails.mongodb.version", String, Version.Main.PRODUCTION.asInDownloadPath())
-        Version.valueOf("V" + version.replaceAll(/(\.|-)/, '_').toUpperCase())
+        String version = config.getProperty("grails.mongodb.version", String, de.flapdoodle.embed.mongo.distribution.Version.Main.V6_0.asInDownloadPath())
+        Versions.withFeatures(Version.of(version))
     }
 
-    static MongodExecutable mongodExecutable = null
+//    static MongodExecutable mongodExecutable = null
+    TransitionWalker.ReachedState<RunningMongodProcess> started
 
     Closure doWithSpring() {{->
         if (Environment.current == Environment.TEST) {
-            IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
-                    .defaults(Command.MongoD)
-                    .processOutput(ProcessOutput.defaultInstanceSilent)
-                    .build()
-
-            MongodStarter starter = MongodStarter.getInstance(runtimeConfig)
-
-            IMongodConfig mongodConfig = new MongodConfigBuilder()
-                    .version(getVersion())
-                    .net(new Net("127.0.0.1", getPort(), Network.localhostIsIPv6()))
-                    .build()
-
-            mongodExecutable = starter.prepare(mongodConfig)
-            mongodExecutable.start()
+            started = Mongod.instance()
+                    .withProcessOutput(Start.to(ProcessOutput.class)
+                            .providedBy(ProcessOutput::silent))
+                    .withNet(Start.to(Net.class)
+                            .initializedWith(Net.builder()
+                                    .bindIp("127.0.0.1")
+                                    .port(getPort())
+                                    .isIpv6(de.flapdoodle.net.Net.localhostIsIPv6())
+                                    .build()))
+            .start(getVersion())
         }
     }}
 
     void onShutdown(evt) {
-        if (mongodExecutable != null) {
-            mongodExecutable.stop()
+        if (started != null) {
+            started.close()
         }
     }
 
